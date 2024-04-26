@@ -65,3 +65,13 @@ h1 {
   width: 100%;
   text-align: center;
 }
+
+
+.score {
+  font-family: "Helvetica Neue";
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+  font-size: large;
+}
