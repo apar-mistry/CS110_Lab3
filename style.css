@@ -9,7 +9,12 @@ h1 {
   text-align: center;
   font-size: 4em;
 }
+#game_status{
+  margin: 10px auto;
+  text-align: center;
+  font-size: 1.5em;
 
+}
 .whose_turn {
   margin: 10px auto;
   margin-bottom: 20px;
