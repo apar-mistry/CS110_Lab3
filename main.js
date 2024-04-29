@@ -45,54 +45,16 @@ function resetBoard() {
 
 
 function handleSquareClick(event) {
-    console.log("Clicked:", event.target); // for debuging
-    
-    const squareSpan = event.target.querySelector('.xo'); // this gets the span inside the square div
-// span will be changed to the current player's mark
-    // if the square is already filled, do nothing
-    if (squareSpan.innerText !== '') return; // inner text refers to the text inside the span
+    const squareSpan = event.target.querySelector('.xo');
+    if (squareSpan.innerText !== '' || currentPlayer !== 'X') return; // Only act on empty squares and if it's human's turn
 
-    // add the current player's mark to the square
-    squareSpan.innerText = currentPlayer; // setting the inner text to the current player, starts off as X
-    
-    // for player moves array
+    makeMove(squareSpan, 'X'); // Human player is always 'X'
+    checkGameState(); // Check if the game is over immediately after the move
 
-    // convert the node list to an array and find the index of the clicked square
-    const index = Array.from(squares).indexOf(event.target); // get the index of the square that was clicked
-    // console.log(index);
-    // Check for win or draw, etc.
-
-    if (currentPlayer === 'X') { // tracks the moves for x
-        xArr.push(index);
+    // If no win or draw, AI makes a move
+    if (currentPlayer === 'O') {
+        aiMove();
     }
-    else {
-        OArr.push(index); // same for O
-    }
-
-
-    console.log("Square index:", index); // Log the index of the clicked square
-    console.log("Current Player's Moves:", currentPlayer === 'X' ? xArr : OArr); // Log the move arrays for debugging
-
-
-
-        // Delay win check and alert
-        if (winCheck(currentPlayer, currentPlayer === 'X' ? xArr : OArr)) {
-            setTimeout(() => {
-                alert(`${currentPlayer} wins!!!!`);
-                updateScore(currentPlayer); // Update score for the current player
-                newGame();
-            }, 10);
-        } else if (xArr.length + OArr.length === 9) {
-            setTimeout(() => {
-                alert("It's a draw!");
-                newGame();
-            }, 10);
-        } else {
-            // Only switch players if no win or draw
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-            currentPlayerDisplay.innerText = currentPlayer;
-            setTimeout(() => {}, 10);  // Delay any further logic if needed
-        }
 }
 
 
@@ -141,6 +103,55 @@ function newGame() {
     currentPlayer = 'X'; // reset the current player to X
     currentPlayerDisplay.innerText = currentPlayer; // update the display to show the current player
 }
+
+
+
+function checkGameState() {
+    const playerMoves = currentPlayer === 'X' ? xArr : OArr;
+    if (winCheck(currentPlayer, playerMoves)) {
+        updateScore(currentPlayer);
+        setTimeout(() => {
+            alert(`${currentPlayer} wins!!!!`);
+            newGame();
+        }, 100);  // Delay the alert and new game reset to allow UI to update
+    } else if (xArr.length + OArr.length === 9) {
+        setTimeout(() => {
+            alert("It's a draw!");
+            newGame();
+        }, 100);
+    } else {
+        // Only switch players if no win or draw
+        switchPlayer();
+    }
+}
+
+function switchPlayer() {
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    currentPlayerDisplay.innerText = currentPlayer;
+}
+
+function aiMove() {
+    const emptySquares = Array.from(squares).filter(square => square.querySelector('.xo').innerText === '');
+    if (emptySquares.length > 0) {
+        const randomSquare = emptySquares[Math.floor(Math.random() * emptySquares.length)];
+        makeMove(randomSquare.querySelector('.xo'), 'O');
+        checkGameState();
+    }
+}
+
+function makeMove(squareSpan, player) {
+    squareSpan.innerText = player;
+    recordMove(player, Array.from(squares).indexOf(squareSpan.parentNode)); // this works by finding the index of the squareSpan's parent node in the squares array
+}
+
+function recordMove(player, index) {
+    if (player === 'X') {
+        xArr.push(index);
+    } else {
+        OArr.push(index);
+    }
+}
+
 
 
 
