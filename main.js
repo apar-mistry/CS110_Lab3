@@ -4,6 +4,10 @@ const squares = document.querySelectorAll('.row > div'); // selector all returns
 const currentPlayerDisplay = document.querySelector('.display_player'); // currentPlayerDisplay reflects the who's turn it is
 // const newGameButton = document.querySelector('.new_game');
 const resetButton = document.querySelector('.reset');
+let xScore = 0; // #FIXME ill handle this later when i develop winning logic
+let OScore = 0;
+let xArr = [];
+let OArr = [];
 
 
 // for each square, add an event listener to handle the click
@@ -52,6 +56,22 @@ function resetBoard() {
     currentPlayerDisplay.innerText = currentPlayer;
 }
 
+
+
+// function checks if a player has won the game by comparing their moves to the winning combinations.
+// It takes two parameters: 'player' represents the current player ('X' or 'O'), and 'playerMoves' represents an array of the player's moves.
+function winCheck(player, playerMoves) {
+    // An array of arrays representing the winning combinations.
+    const winCombos = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // columns
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // rows
+        [0, 4, 8], [2, 4, 6] // diagonals
+    ];
+    // check if winCombos.some returns true by finding if it contains any of the combinations in winCombos and if every index in the playerMoves lines up with the combox
+    return winCombos.some(combination =>
+        combination.every(index => playerMoves.includes(index))
+    );
+}
 
 
 
