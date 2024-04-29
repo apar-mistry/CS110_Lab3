@@ -4,6 +4,7 @@ const squares = document.querySelectorAll('.row > div'); // selector all returns
 const currentPlayerDisplay = document.querySelector('.display_player'); // currentPlayerDisplay reflects the who's turn it is
 // const newGameButton = document.querySelector('.new_game');
 const resetButton = document.querySelector('.reset');
+const newGameButton = document.querySelector('.new_game');
 let xScore = 0; // #FIXME ill handle this later when i develop winning logic
 let OScore = 0;
 let xArr = [];
@@ -17,6 +18,29 @@ squares.forEach(square => { // event listerners are used for each square to watc
 // newGameButton.addEventListener('click', startNewGame); // event listener for the new game button
 resetButton.addEventListener('click', resetBoard)
 
+newGameButton.addEventListener('click', newGame);
+
+
+function resetBoard() {
+    console.log("Resetting board..."); // for debig
+
+    squares.forEach(square => {
+        const squareSpan = square.querySelector('.xo');
+        if (squareSpan) {
+            squareSpan.innerText = ''; // clears the text
+        } else {
+            console.log("Failed to find .xo in square:", square);
+        }
+    });
+    xScore = 0;
+    OScore = 0;
+    xArr = [];
+    OArr = [];
+    currentPlayer = 'X';
+    currentPlayerDisplay.innerText = currentPlayer;
+    document.getElementById('x-score').textContent = 0;
+    document.getElementById('o-score').textContent = 0;
+}
 
 
 
@@ -52,40 +76,25 @@ function handleSquareClick(event) {
 
 
         // Delay win check and alert
-    setTimeout(() => {
         if (winCheck(currentPlayer, currentPlayer === 'X' ? xArr : OArr)) {
-            alert(`${currentPlayer} wins!!!!`);
-            updateScore(currentPlayer);
-            resetBoard();
-        } else if (xArr.length + OArr.length === 9) { // Check for a draw
-            alert("It's a draw!");
-            resetBoard();
+            setTimeout(() => {
+                alert(`${currentPlayer} wins!!!!`);
+                updateScore(currentPlayer); // Update score for the current player
+                newGame();
+            }, 10);
+        } else if (xArr.length + OArr.length === 9) {
+            setTimeout(() => {
+                alert("It's a draw!");
+                newGame();
+            }, 10);
         } else {
-            // Switch players if no win or draw
+            // Only switch players if no win or draw
             currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
             currentPlayerDisplay.innerText = currentPlayer;
+            setTimeout(() => {}, 10);  // Delay any further logic if needed
         }
-    }, 10);  
 }
 
-
-function resetBoard() {
-    console.log("Resetting board..."); // for debig
-
-    squares.forEach(square => {
-        const squareSpan = square.querySelector('.xo');
-        if (squareSpan) {
-            squareSpan.innerText = ''; // clears the text
-        } else {
-            console.log("Failed to find .xo in square:", square);
-        }
-    });
-
-    xArr = [];
-    OArr = [];
-    currentPlayer = 'X';
-    currentPlayerDisplay.innerText = currentPlayer;
-}
 
 
 
@@ -104,8 +113,34 @@ function winCheck(player, playerMoves) {
     );
 }
 
+function updateScore(player) {
+    console.log("Updating score for player:", player); 
+    if (player === 'X') {
+        xScore++;
+        document.getElementById('x-score').textContent = xScore;
+    } else if (player === 'O') {
+        OScore++;
+        document.getElementById('o-score').textContent = OScore;
+    }
+    console.log("Scores X:", xScore, "O:", OScore); // Verify scores are incremented
+}
 
-
+function newGame() {
+    console.log("Starting a new game..."); // for debug
+    
+    squares.forEach(square => {
+        const squareSpan = square.querySelector('.xo');
+        if (squareSpan) { // if the span is not null
+            squareSpan.innerText = ''; // clears the text
+        } else {
+            console.log("Failed to find .xo in square:", square);
+        }
+    });
+    xArr = [];
+    OArr = [];
+    currentPlayer = 'X'; // reset the current player to X
+    currentPlayerDisplay.innerText = currentPlayer; // update the display to show the current player
+}
 
 
 
