@@ -39,10 +39,35 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
                 displayPlayer.textContent = currentPlayer;
+                
+                if(currentPlayer === 'O')makeRandomMove();
             }
         }
     }
+    function makeRandomMove(){
+        console.log("Making move!");
+        let emptySlots = [];
+        squares.forEach(square => {
+            if(square.querySelector('.xo').textContent === ''){
+                emptySlots.push(square);
+            }
+        });
+        console.log(emptySlots);
+        let randomTile = emptySlots[(Math.floor(Math.random() * emptySlots.length))];
+        randomTile.querySelector('.xo').textContent = 'O';
+        if(checkWin()){
+            alert('Player O Wins!');
+            oScore+=1;
+            resetBoard();
+        }else if(isDraw()){
+            alert("It's a draw!");
+            resetBoard();
+        }else{
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            displayPlayer.textContent = currentPlayer;
+        }
 
+    }
     function checkWin() {
         const combos = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],  // Rows
