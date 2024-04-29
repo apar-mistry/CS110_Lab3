@@ -25,18 +25,47 @@ function handleSquareClick(event) {
     
     const squareSpan = event.target.querySelector('.xo'); // this gets the span inside the square div
 // span will be changed to the current player's mark
-    // If the square is already filled, do nothing
+    // if the square is already filled, do nothing
     if (squareSpan.innerText !== '') return; // inner text refers to the text inside the span
 
-    // Add the current player's mark to the square
+    // add the current player's mark to the square
     squareSpan.innerText = currentPlayer; // setting the inner text to the current player, starts off as X
     
-    // Check for win or draw, etc.
-    // ...
+    // for player moves array
 
-    // Switch the player                    condition ? value_if_true : value_if_false;
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X'; // Set the currentPlayer variable to 'O' if currentPlayer is currently 'X'. If currentPlayer is not 'X', then set it to 'X'
-    currentPlayerDisplay.innerText = currentPlayer;
+    // convert the node list to an array and find the index of the clicked square
+    const index = Array.from(squares).indexOf(event.target); // get the index of the square that was clicked
+    // console.log(index);
+    // Check for win or draw, etc.
+
+    if (currentPlayer === 'X') { // tracks the moves for x
+        xArr.push(index);
+    }
+    else {
+        OArr.push(index); // same for O
+    }
+
+
+    console.log("Square index:", index); // Log the index of the clicked square
+    console.log("Current Player's Moves:", currentPlayer === 'X' ? xArr : OArr); // Log the move arrays for debugging
+
+
+
+        // Delay win check and alert
+    setTimeout(() => {
+        if (winCheck(currentPlayer, currentPlayer === 'X' ? xArr : OArr)) {
+            alert(`${currentPlayer} wins!!!!`);
+            updateScore(currentPlayer);
+            resetBoard();
+        } else if (xArr.length + OArr.length === 9) { // Check for a draw
+            alert("It's a draw!");
+            resetBoard();
+        } else {
+            // Switch players if no win or draw
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            currentPlayerDisplay.innerText = currentPlayer;
+        }
+    }, 10);  
 }
 
 
@@ -52,6 +81,8 @@ function resetBoard() {
         }
     });
 
+    xArr = [];
+    OArr = [];
     currentPlayer = 'X';
     currentPlayerDisplay.innerText = currentPlayer;
 }
@@ -72,6 +103,7 @@ function winCheck(player, playerMoves) {
         combination.every(index => playerMoves.includes(index))
     );
 }
+
 
 
 
