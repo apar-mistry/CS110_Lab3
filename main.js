@@ -10,6 +10,9 @@ let OScore = 0;
 let xArr = [];
 let OArr = [];
 
+document.getElementById('x-score').textContent = 0;
+document.getElementById('o-score').textContent = 0;
+
 
 // for each square, add an event listener to handle the click
 squares.forEach(square => { // event listerners are used for each square to watch for clicks
@@ -20,12 +23,15 @@ resetButton.addEventListener('click', resetBoard)
 
 newGameButton.addEventListener('click', newGame);
 
+currentPlayerDisplay.innerText = 'X';
+
 
 function resetBoard() {
     console.log("Resetting board..."); // for debig
 
     squares.forEach(square => {
         const squareSpan = square.querySelector('.xo');
+        square.style.backgroundColor = '';
         if (squareSpan) {
             squareSpan.innerText = ''; // clears the text
         } else {
@@ -46,6 +52,8 @@ function resetBoard() {
 
 function handleSquareClick(event) {
     const squareSpan = event.target.querySelector('.xo');
+    const square = event.target;
+    square.style.backgroundColor = 'orange';
     if (squareSpan.innerText !== '' || currentPlayer !== 'X') return; // Only act on empty squares and if it's human's turn
 
     makeMove(squareSpan, 'X'); // Human player is always 'X'
@@ -91,6 +99,7 @@ function newGame() {
     console.log("Starting a new game..."); // for debug
     
     squares.forEach(square => {
+        square.style.backgroundColor = '';
         const squareSpan = square.querySelector('.xo');
         if (squareSpan) { // if the span is not null
             squareSpan.innerText = ''; // clears the text
@@ -134,6 +143,7 @@ function aiMove() {
     const emptySquares = Array.from(squares).filter(square => square.querySelector('.xo').innerText === '');
     if (emptySquares.length > 0) {
         const randomSquare = emptySquares[Math.floor(Math.random() * emptySquares.length)];
+        randomSquare.style.backgroundColor = 'orange';
         makeMove(randomSquare.querySelector('.xo'), 'O');
         checkGameState();
     }

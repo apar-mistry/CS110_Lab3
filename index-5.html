@@ -12,7 +12,11 @@
 <body>
 
   <h1>Tic Tac Toe</h1>
-  <h2>Its your turn, <span class="display_player"></span></h2>
+  <div style="text-align: center;">
+    <p>Its your turn, <span class="display_player"></span></p>
+    <p> X's Score: <span id="x-score"></span> O's Score: <span id="o-score"></span></p>
+  </div>
+
 
   <div class="game_board">
     <div class='row'>
@@ -31,12 +35,6 @@
       <div class="nine"><span class="xo"></span></div>
     </div>
   </div>
-  <div class="score">
-    X's Score: <span id="x-score"></span>
-</div>
-<div class="score">
-    O's Score: <span id="o-score"></span>
-</div>
   <button class="new_game">New Game</button>
   <button class="reset">Reset</button>
   <script src="main.js"></script>
